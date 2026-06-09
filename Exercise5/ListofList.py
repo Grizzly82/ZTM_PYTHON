@@ -12,7 +12,7 @@ picture = [
 for row in picture:
     for pixel in row:
         if pixel == 0:
-            print(" ", end="")
+            print(" ", end="") #end="" means that we don't want to print a new line after each character, we want to print them on the same line
         else:
             print("*", end="")
-    print("")
+    print("") #print a new line after each row
