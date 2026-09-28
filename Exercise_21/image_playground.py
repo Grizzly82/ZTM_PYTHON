@@ -8,7 +8,8 @@ def process_and_save_image(input_path, output_folder, output_filename):
     try:
         # Ensure the output folder exists
         os.makedirs(output_folder, exist_ok=True)
-
+        #loop through the images in the input folder
+        
         # Open the image
         img = Image.open(input_path)
 
