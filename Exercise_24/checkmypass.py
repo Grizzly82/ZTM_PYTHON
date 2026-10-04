@@ -1,4 +1,5 @@
 import hashlib
+import re
 
 import requests
 import sys
@@ -52,19 +53,7 @@ def main(args):
         print("Your password has not been compromised. You are safe!")
     
     print("\n*******************************************************************\n")
-
+    return 'done'
 
 if __name__ == '__main__':
-    user_password = input("Enter your password to check if it has been compromised: ")
-   # converted_password = convert_to_sha1(user_password)
-   # print(f"Your password in SHA1 format is: {converted_password}")
-    
-    check = pawned_api_check(user_password)
-    print("*******************************************************************\n")
-    if check:
-        print(f"Your password has been compromised {check} times. You should change your password immediately.")
-    else:
-        print("Your password has not been compromised. You are safe!")
-    
-    print("\n*******************************************************************\n")
-    
+    main(sys.argv[1:])
