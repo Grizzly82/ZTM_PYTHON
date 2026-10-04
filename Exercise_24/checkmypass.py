@@ -2,59 +2,55 @@ import hashlib
 import requests
 import sys
 
+# ANSI color codes
+RED = "\033[91m"
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+CYAN = "\033[96m"
+RESET = "\033[0m"
 
 def request_api_data(prefix):
-    """Request data from HIBP API using the first 5 chars of the SHA1 hash."""
     url = f"https://api.pwnedpasswords.com/range/{prefix}"
-    res = requests.get(url)
-
+    res = requests.get(url, timeout=5)
     if res.status_code != 200:
-        raise RuntimeError(f"Error fetching: {res.status_code}. Try again.")
-
+        raise RuntimeError(f"{RED}Error fetching: {res.status_code}{RESET}")
     return res
 
-
 def read_response(response):
-    """Parse API response into (hash_suffix, count) pairs."""
     return (line.split(':') for line in response.text.splitlines())
 
-
 def get_password_leaks_count(hashes, hash_to_check):
-    """Return number of times the password hash appears in breaches."""
     for h, count in hashes:
         if h == hash_to_check:
             return int(count)
     return 0
 
-
 def pawned_api_check(password):
-    """Check if password has been exposed in data breaches."""
     sha1password = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
     first5, tail = sha1password[:5], sha1password[5:]
-
     response = request_api_data(first5)
     hashes = read_response(response)
-
     return get_password_leaks_count(hashes, tail)
 
-
 def main():
-    user_password = input("Enter your password to check if it has been compromised: ")
+    print(f"{CYAN}=== Password Breach Checker ==={RESET}")
+    user_password = input("Enter your password: ")
+
+    if not user_password:
+        print(f"{YELLOW}Password cannot be empty.{RESET}")
+        return
 
     count = pawned_api_check(user_password)
 
-    print("\n*******************************************************************\n")
+    print(f"\n{CYAN}{'*' * 65}{RESET}\n")
 
     if count:
-        print(f"⚠️ Your password has been compromised **{count} times**.")
-        print("You should change your password immediately.")
+        print(f"{RED}⚠️  Your password has been compromised {count} times!{RESET}")
+        print(f"{YELLOW}You should change it immediately.{RESET}")
     else:
-        print("✅ Your password has NOT been found in known breaches.")
+        print(f"{GREEN}✔ Your password has NOT been found in known breaches.{RESET}")
 
-    print("\n*******************************************************************\n")
-
-    return 0
-
+    print(f"\n{CYAN}{'*' * 65}{RESET}\n")
 
 if __name__ == '__main__':
     sys.exit(main())
