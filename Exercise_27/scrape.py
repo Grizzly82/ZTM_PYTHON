@@ -2,11 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-response = requests.get("https://news.ycombinator.com/")
-soup = BeautifulSoup(response.text, "html.parser")
-links = soup.select(".athing .titleline a")
-votes = soup.select(".score")
-comments = soup.select(".subtext a:last-child")
+
 
 def sort_by_score(items):
     return sorted(items, key=lambda x: x["score"], reverse=True)
@@ -25,6 +21,22 @@ def create_custom_item(links, votes, comments):
                     "score": score,
                 })
     return hacker_news_items
+
+
+for pagenum in range(1, 3):  # Scrape the first 3 pages
+    response = requests.get(f"https://news.ycombinator.com/?p={pagenum}")
+    soup = BeautifulSoup(response.text, "html.parser")
+    links = soup.select(".athing .titleline a")
+    votes = soup.select(".score")
+    comments = soup.select(".subtext a:last-child")
+
+    for item in sort_by_score(create_custom_item(links, votes, comments)):
+        print(f"Title: {item['title']}")
+        print(f"Link: {item['link']}")
+        print(f"Score: {item['score']}" + " points")
+        print("--------------------\n")
+
+
 
 
 """ for item in soup.select(".athing"):
@@ -47,5 +59,5 @@ for item in sort_by_score(create_custom_item(links, votes, comments)):
     print(f"Link: {item['link']}")
     print(f"Score: {item['score']}" + " points")
     print("--------------------\n")
-#print(create_custom_item(links, votes, comments))
+
 print("\n\nFinished scraping Hacker News.\n")
