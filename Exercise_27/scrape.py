@@ -45,7 +45,7 @@ def create_custom_item(links, votes, comments):
 for item in sort_by_score(create_custom_item(links, votes, comments)):
     print(f"Title: {item['title']}")
     print(f"Link: {item['link']}")
-    print(f"Score: {item['score']}")
+    print(f"Score: {item['score']}" + " points")
     print("--------------------\n")
 #print(create_custom_item(links, votes, comments))
 print("\n\nFinished scraping Hacker News.\n")
