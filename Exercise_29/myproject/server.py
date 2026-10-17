@@ -1,4 +1,4 @@
-from flask import Flask, app, render_template,url_for
+from flask import Flask, app, render_template, request,url_for,redirect
 
 # Source - https://stackoverflow.com/a/23327352
 # Posted by Martijn Pieters, modified by community. See post 'Timeline' for change history
@@ -23,6 +23,18 @@ def serve_static(page_name):
     return render_template(page_name)
 
   
+@app.route('/submit_form', methods=['GET', 'POST'])
+def submit_form():  
+    if request.method == 'POST':
+        # Process the form data here
+        data = request.form.to_dict()
+        print(data)
+        return redirect('./thankyou.html')
+    else:
+        return "something went wrong, Try again!"
+
+
+
 
 """ @app.route('/about.html')
 def about_html():
