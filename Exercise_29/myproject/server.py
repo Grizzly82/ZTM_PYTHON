@@ -29,12 +29,15 @@ def submit_form():
         # Process the form data here
         data = request.form.to_dict()
         print(data)
+        write_to_file(data)
         return redirect('./thankyou.html')
     else:
         return "something went wrong, Try again!"
 
-
-
+def write_to_file(data):
+    with open("database.txt", "a") as f:
+        for key, value in data.items():
+            f.write(f"{key}: {value}\n")
 
 """ @app.route('/about.html')
 def about_html():
